@@ -1,5 +1,6 @@
-# JetBrains project files
 .idea
+.vscode
+.DS_Store
 
 # NPM
 node_modules
