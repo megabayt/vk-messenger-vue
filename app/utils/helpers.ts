@@ -1,4 +1,6 @@
+import { reduce } from 'lodash';
 import { create } from 'apisauce';
+
 import { config } from '../constants/api';
 
 export const api = create({
@@ -11,19 +13,15 @@ export const api = create({
 });
 
 api.addRequestTransform((request) => {
-  request.url += `&v=${config.VERSION}`;
+  request.url += `&v=${config.VERSION}`; // tslint:disable-line
 });
 
-export function serialize(object) {
-  let str = '';
+export function serialize(object: object): string {
+  const str = '';
   if (!object) {
     return str;
   }
-  for (const key in object) {
-    if (str !== '') {
-      str += '&';
-    }
-    str += `&${key}=${encodeURIComponent(object[key])}`;
-  }
-  return str;
+  return reduce(object, (result: string, value: string, key: string) => {
+    return `${result}&${key}=${encodeURIComponent(value)}`;
+  }, '');
 }
