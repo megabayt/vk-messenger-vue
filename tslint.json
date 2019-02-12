@@ -31,6 +31,7 @@
       "variable-name": [true, "ban-keywords", "check-format", "allow-pascal-case"],
       "interface-name" : false,
       "object-shorthand-properties-first": false,
+      "only-arrow-functions": false,
       // Recommended built-in rules
       "no-var-keyword": true,
       "no-parameter-reassignment": true,
