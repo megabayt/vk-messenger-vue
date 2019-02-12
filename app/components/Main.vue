@@ -8,9 +8,7 @@
       androidSelectedTabHighlightColor="#ffffff"
     >
       <TabViewItem title="Tab 1">
-        <GridLayout columns="*" rows="*">
-          <Label class="message" text="Messages" col="0" row="0"/>
-        </GridLayout>
+        <ChatList />
       </TabViewItem>
       <TabViewItem title="Tab 2">
         <GridLayout columns="*" rows="*">
@@ -22,8 +20,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
-export default Vue.extend({
+import Vue from 'vue';
+import ChatList from './ChatList.vue';
 
+export default Vue.extend({
+  components: { ChatList },
 })
 </script>
