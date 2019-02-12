@@ -21,7 +21,7 @@ export const VkontakteScopeList = {
   market: 134217728,
 };
 const appId = 6014970;
-// eslint-disable-next-line
+// tslint:disable-next-line
 const scope = VkontakteScopeList.friends | VkontakteScopeList.messages | VkontakteScopeList.offline;
 
 export const config = {
