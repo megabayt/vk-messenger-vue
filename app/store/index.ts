@@ -1,7 +1,7 @@
 import Vue from 'nativescript-vue';
 import Vuex from 'vuex';
 import localStorage from 'nativescript-localstorage';
-import { IStore } from '@/store/types';
+import { initialState, IStore } from '@/store/types';
 
 import * as actions from './actions';
 import * as mutations from './mutations';
@@ -23,10 +23,6 @@ const NSVuexPersistent = (store: IStore) => {
 export default new Vuex.Store({
   actions,
   mutations,
-  state: {
-    user: {
-      token: '',
-    },
-  },
+  state: initialState,
   plugins: [NSVuexPersistent],
 });
