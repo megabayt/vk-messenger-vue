@@ -17,9 +17,10 @@
               "named-imports-order": "lowercase-first",
               "grouped-imports": true,
               "groups": [
-                  { "name": "current dir", "match": "^[.]", "order": 20 },
-                  { "name": "parent dir", "match": "^[.][.]", "order": 30 },
-                  { "name": "others", "match": "^", "order": 10 }
+                { "name": "root import", "match": "^@", "order": 20 },
+                { "name": "current dir", "match": "^[.]", "order": 30 },
+                { "name": "parent dir", "match": "^[.][.]", "order": 40 },
+                { "name": "others", "match": "^", "order": 10 }
               ]
           }
       ],
@@ -39,7 +40,7 @@
       "readonly-keyword": true,
       "readonly-array": true,
       "no-let": true,
-      "no-object-mutation": true,
+      "no-object-mutation": false,
       "no-delete": true,
       "no-method-signature": true,
 

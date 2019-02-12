@@ -13,7 +13,7 @@ export const api = create({
 });
 
 api.addRequestTransform((request) => {
-  request.url += `&v=${config.VERSION}`; // tslint:disable-line
+  request.url += `&v=${config.VERSION}`;
 });
 
 export function serialize(object: object): string {
