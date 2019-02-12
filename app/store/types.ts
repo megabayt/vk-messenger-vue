@@ -1,11 +1,11 @@
 import { Store } from 'vuex';
 
 export interface IUserState {
-  readonly token: string;
+  token: string;
 }
 
 export interface IState {
-  readonly user: IUserState;
+  user: IUserState;
 }
 
 export type IStore = Store<IState>;

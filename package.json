@@ -16,7 +16,7 @@
   "scripts": {
     "start": "tns debug ios --bundle",
     "tools": "./node_modules/.bin/vue-devtools",
-    "lint": "./node_modules/.bin/tslint"
+    "lint": "node_modules/.bin/tslint -p ./tsconfig.json 'src/**/*.ts?(x)'"
   },
   "dependencies": {
     "apisauce": "^1.0.2",

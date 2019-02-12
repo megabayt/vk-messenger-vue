@@ -29,7 +29,8 @@
     "skipLibCheck": true,
 
     "noUnusedLocals": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,
+    "noImplicitAny": true
   },
   "include": [
     "app",
