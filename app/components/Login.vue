@@ -21,8 +21,22 @@ export default Vue.extend({
   data: () => ({
     showWv: true,
     webViewSrc: config.OAUTH_URL,
+    watcher: null,
   }),
+  created() {
+    this .watcher = store.watch(() => store.state.user.token, this.checkToken);
+  },
+  beforeDestroy() {
+    if(this .watcher) {
+      this .watcher();
+    }
+  },
   methods: {
+    checkToken() {
+      if (store.state.user.token !== '') {
+        this .$navigateTo(Main, { clearHistory: true });
+      }
+    },
     handleLoadStart({ url }) {
       if (url.indexOf('#') !== -1) {
         const afterHash = url.split('#')[1];
@@ -30,8 +44,7 @@ export default Vue.extend({
         if (regexpMatch && regexpMatch[1]) {
           const token = regexpMatch[1];
           store.dispatch('USER_TOKEN_SET', token);
-          this.showWv = false;
-          this.$navigateTo(Main, { clearHistory: true });
+          this .showWv = false;
         }
       }
     }
