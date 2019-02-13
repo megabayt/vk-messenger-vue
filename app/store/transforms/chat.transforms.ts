@@ -1,13 +1,13 @@
 import { chain, find, get } from 'lodash';
 import moment from 'moment';
-import { IChatsOrigResponse, IGroup, IMessages, IProfile } from '@/utils/types';
+import { IChat, IChatsResponse, IChatsTransformedResponse } from '@/types';
 
-export const chatsTransform = (response: IChatsOrigResponse): any => {
+export const chatsTransform = (response: IChatsResponse): IChatsTransformedResponse => {
   const conversationIds = chain(response)
     .get('items')
-    .reduce((result: any, item: IMessages) => {
+    .reduce((result: ReadonlyArray<number>, item) => {
       const peerId: number = get(item, 'conversation.peer.id') || 0;
-      const profile: IProfile | IGroup | undefined = find(get(response, 'profiles'), { id: peerId })
+      const profile = find(get(response, 'profiles'), { id: peerId })
         || find(get(response, 'groups'), { id: peerId });
       if (!profile || !profile.id) {
         return result;
@@ -17,9 +17,9 @@ export const chatsTransform = (response: IChatsOrigResponse): any => {
     .value() || [];
   const conversations = chain(response)
     .get('items')
-    .reduce((result: any, item: IMessages) => {
+    .reduce((result: { [key:string]: IChat}, item) => {
       const peerId: number = get(item, 'conversation.peer.id') || 0;
-      const profile: IProfile | IGroup | undefined = find(get(response, 'profiles'), { id: peerId })
+      const profile = find(get(response, 'profiles'), { id: peerId })
         || find(get(response, 'groups'), { id: peerId });
       if (!profile || !profile.id) {
         return result;
@@ -41,8 +41,10 @@ export const chatsTransform = (response: IChatsOrigResponse): any => {
           lastMessage: {
             text: item.last_message.text,
             date: moment().diff(moment.unix(item.last_message.date), 'days') > 0
-              ? moment.unix(item.last_message.date).format('DD.MM.YYYY')
-              : moment.unix(item.last_message.date).format('HH:mm'),
+              ? moment().diff(moment.unix(item.last_message.date), 'year') > 0
+                ? moment.unix(item.last_message.date).format('DD MMM YYYY')
+                  : moment.unix(item.last_message.date).format('DD MMM')
+                    : moment.unix(item.last_message.date).format('HH:mm'),
           },
         },
       };
@@ -53,18 +55,3 @@ export const chatsTransform = (response: IChatsOrigResponse): any => {
     conversationIds,
   };
 };
-
-export interface IConversation {
-  id: number;
-  previewAvatar: string;
-  fullName: string;
-  lastMessage: {
-    text: string;
-    date: string;
-  };
-}
-
-export interface IConversations {
-  conversations: { [key: number]: IConversation; };
-  conversationIds: ReadonlyArray<number>;
-}

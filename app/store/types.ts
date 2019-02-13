@@ -1,6 +1,5 @@
 import { Store } from 'vuex';
-
-import { IConversations } from './transforms/chat.transforms';
+import { IChatsTransformedResponse } from '@/types';
 
 export interface IUserState {
   token: string;
@@ -9,9 +8,8 @@ export interface IUserState {
 export interface IChatsState {
   fetching: boolean;
   error: boolean;
-  data: IConversations;
+  data: IChatsTransformedResponse;
 }
-
 export interface IState {
   user: IUserState;
   chats: IChatsState;
@@ -33,4 +31,4 @@ export const initialState: IState = {
   chats: initialChatsState,
 };
 
-export type IStore = Store< IState >;
+export type IStore = Store<IState>;
