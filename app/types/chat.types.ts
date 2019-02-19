@@ -87,6 +87,7 @@ export interface IChat {
   id: number;
   previewAvatar: string;
   fullName: string;
+  unreadCount: number;
   lastMessage: {
     text: string;
     date: string;

@@ -38,6 +38,7 @@ export const chatsTransform = (response: IChatsResponse): IChatsTransformedRespo
           id: profile.id,
           previewAvatar: profile.photo_50,
           fullName,
+          unreadCount: get(item, 'conversation.unread_count') || 0,
           lastMessage: {
             text: item.last_message.text,
             date: moment().diff(moment.unix(item.last_message.date), 'days') > 0
