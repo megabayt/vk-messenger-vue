@@ -14,7 +14,9 @@
     }
   },
   "scripts": {
-    "start": "tns debug ios --bundle",
+    "start": "tns run ios",
+    "watch": "tns debug ios --bundle",
+    "hotrld": "tns debug ios --hmr",
     "tools": "./node_modules/.bin/vue-devtools",
     "lint": "node_modules/.bin/tslint -p ./tsconfig.json 'app/**/*.ts?(x)'"
   },
