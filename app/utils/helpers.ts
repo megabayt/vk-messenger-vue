@@ -3,8 +3,7 @@ import { remove } from 'lodash';
 import { create, RequestTransform } from 'apisauce';
 
 import { config } from '../constants/api';
-
-import { IChatsFetch } from './types';
+import { IChatsFetch } from '../types';
 
 const api = create({
   baseURL: config.BASE_URL,

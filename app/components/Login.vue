@@ -37,7 +37,7 @@ export default Vue.extend({
         this .$navigateTo(Main, { clearHistory: true });
       }
     },
-    handleLoadStart({ url }) {
+    handleLoadStart({ url }: { url: string }) {
       if (url.indexOf('#') !== -1) {
         const afterHash = url.split('#')[1];
         const regexpMatch = afterHash.match(/access_token=(.*?)&/);
