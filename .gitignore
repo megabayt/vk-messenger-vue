@@ -8,3 +8,6 @@ node_modules
 # NativeScript application
 hooks
 platforms
+app/constants/api.ts
+app/fixtures/*
+!app/fixtures/.gitkeep

@@ -34,4 +34,5 @@ export const config = {
   BASE_URL: 'https://api.vk.com/method/',
   TIMEOUT: 5 * 1000,
   VERSION: 5.92,
+  USE_FIXTURES: false,
 };

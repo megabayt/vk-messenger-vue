@@ -3,7 +3,8 @@ import { remove } from 'lodash';
 import { create, RequestTransform } from 'apisauce';
 
 import { config } from '../constants/api';
-import { IChatsFetch } from '../types';
+import { okResponse, IChatsFetch } from '../types';
+import getConversationsJson from '../fixtures/getConversations.json';
 
 const api = create({
   baseURL: config.BASE_URL,
@@ -36,4 +37,11 @@ export const setToken = (token: string): void => {
 //   }, '');
 // }
 
-export const chatsFetch: IChatsFetch = () => api.get('/messages.getConversations?extended=1');
+export const chatsFetch: IChatsFetch = () => !config.USE_FIXTURES
+  ? api.get('/messages.getConversations?extended=1')
+  : Promise.resolve({
+    ...okResponse,
+    data: {
+      response: (getConversationsJson as any),
+    },
+  });

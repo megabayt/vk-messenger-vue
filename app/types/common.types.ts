@@ -1,3 +1,5 @@
+import { ApiResponse } from 'apisauce';
+
 export interface ICommonOkResponse<T> {
   response: T;
 }
@@ -9,6 +11,16 @@ export interface ICommonErrorResponse {
   };
 }
 export type ICommonResponse<T> = ICommonOkResponse<T> | ICommonErrorResponse;
+
+export const okResponse: ApiResponse<any> = {
+  ok: true,
+  problem: null,
+  originalError: null,
+  status: 200,
+  headers: {},
+  config: {},
+  duration: 1000,
+}
 
 export interface IPhotoAttachment {
   type: string;
