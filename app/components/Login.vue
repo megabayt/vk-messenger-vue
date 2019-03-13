@@ -24,17 +24,17 @@ export default Vue.extend({
     watcher: null,
   }),
   created() {
-    this .watcher = store.watch(() => store.state.user.token, this.checkToken);
+    this.watcher = store.watch(() => store.state.user.token, this.checkToken);
   },
   beforeDestroy() {
-    if(this .watcher) {
-      this .watcher();
+    if(this.watcher) {
+      this.watcher();
     }
   },
   methods: {
     checkToken() {
       if (store.state.user.token !== '') {
-        this .$navigateTo(Main, { clearHistory: true });
+        this.$navigateTo(Main, { clearHistory: true });
       }
     },
     handleLoadStart({ url }: { url: string }) {
@@ -44,7 +44,7 @@ export default Vue.extend({
         if (regexpMatch && regexpMatch[1]) {
           const token = regexpMatch[1];
           store.dispatch('USER_TOKEN_SET', token);
-          this .showWv = false;
+          this.showWv = false;
         }
       }
     }
