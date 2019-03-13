@@ -3,7 +3,7 @@
     <ActionBar title="Вход" android:flat="true"/>
     <GridLayout columns="*" rows="*">
       <WebView
-        *ngIf="showWv"
+        v-if="showWv"
         :src="webViewSrc"
         @loadStarted="handleLoadStart($event)"
       />
@@ -13,9 +13,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Main from './Main.vue';
-import { config } from '../constants/api';
-import store from '../store';
+import { mapActions, mapState } from 'vuex'
+import Main from '@/components/Main.vue';
+import { config } from '@/constants/api';
+import { IState } from '@/store/types';
 
 export default Vue.extend({
   data: () => ({
@@ -23,17 +24,25 @@ export default Vue.extend({
     webViewSrc: config.OAUTH_URL,
     watcher: null,
   }),
-  created() {
-    this.watcher = store.watch(() => store.state.user.token, this.checkToken);
+  mounted() {
+    this.checkToken();
   },
-  beforeDestroy() {
-    if(this.watcher) {
-      this.watcher();
+  computed: {
+    ...mapState({
+      token: (state: IState) => state.user.token,
+    }),
+  },
+  watch: {
+    token: function () {
+      this.checkToken();
     }
   },
   methods: {
+    ...mapActions({
+      userTokenSet: 'USER_TOKEN_SET',
+    }),
     checkToken() {
-      if (store.state.user.token !== '') {
+      if (this.token !== '') {
         this.$navigateTo(Main, { clearHistory: true });
       }
     },
@@ -43,7 +52,7 @@ export default Vue.extend({
         const regexpMatch = afterHash.match(/access_token=(.*?)&/);
         if (regexpMatch && regexpMatch[1]) {
           const token = regexpMatch[1];
-          store.dispatch('USER_TOKEN_SET', token);
+          this.userTokenSet(token);
           this.showWv = false;
         }
       }

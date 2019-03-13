@@ -11,18 +11,24 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import store from '@/store';
-import ChatListItem from './ChatListItem.vue';
+import { mapActions, mapState } from 'vuex';
+import ChatListItem from '@/components/ChatListItem.vue';
+import { IState } from '@/store/types';
 
 export default Vue.extend({
   components: { ChatListItem },
   created() {
-    store.dispatch('CHATS_FETCH');
+    this.chatsFetch();
+  },
+  methods: {
+    ...mapActions({
+      chatsFetch: 'CHATS_FETCH',
+    }),
   },
   computed: {
-    data() {
-      return store.state.chats.data;
-    }
+    ...mapState({
+      data: (state: IState) => state.chats.data,
+    }),
   }
 })
 </script>
