@@ -1,58 +1,80 @@
 import { chain, find, get } from 'lodash';
-import moment from 'moment';
-import { IChat, IChatsResponse, IChatsTransformedResponse } from '@/types';
+import {
+  IChat,
+  IChatsResponse,
+  IChatsTransformedResponse,
+  IChatGroup,
+  IChatItem,
+  IChatProfile,
+} from '@/types';
+import { dateFormatter, getAttachmentReplacer } from '@/utils/helpers';
+
+const getProfileId = (
+  peerId: number = 0,
+  profiles: ReadonlyArray<IChatProfile>,
+  groups: ReadonlyArray<IChatGroup>,
+): IChatProfile | IChatGroup => {
+  const profile = find(profiles, { id: peerId })
+    || find(groups, { id: peerId });
+  if (profile && profile.id) {
+    return profile;
+  }
+};
 
 export const chatsTransform = (response: IChatsResponse): IChatsTransformedResponse => {
-  const conversationIds = chain(response)
-    .get('items')
-    .reduce((result: ReadonlyArray<number>, item) => {
-      const peerId: number = get(item, 'conversation.peer.id') || 0;
-      const profile = find(get(response, 'profiles'), { id: peerId })
-        || find(get(response, 'groups'), { id: peerId });
-      if (!profile || !profile.id) {
-        return result;
-      }
-      return [...result, profile.id];
-    }, [])
-    .value() || [];
-  const conversations = chain(response)
-    .get('items')
-    .reduce((result: { [key:string]: IChat}, item) => {
-      const peerId: number = get(item, 'conversation.peer.id') || 0;
-      const profile = find(get(response, 'profiles'), { id: peerId })
-        || find(get(response, 'groups'), { id: peerId });
-      if (!profile || !profile.id) {
-        return result;
-      }
-      const name = get(profile, 'name');
-      const firstName = get(profile, 'first_name');
-      const lastName = get(profile, 'last_name');
-      const fullName = name
-        ? name
-        : firstName && lastName
-          ? `${firstName} ${lastName}`
-          : 'Неизвестно';
-      return {
-        ...result,
-        [profile.id]: {
-          id: profile.id,
-          previewAvatar: profile.photo_50,
-          fullName,
-          unreadCount: get(item, 'conversation.unread_count') || 0,
-          lastMessage: {
-            text: item.last_message.text,
-            date: moment().diff(moment.unix(item.last_message.date), 'days') > 0
-              ? moment().diff(moment.unix(item.last_message.date), 'year') > 0
-                ? moment.unix(item.last_message.date).format('DD MMM YYYY')
-                  : moment.unix(item.last_message.date).format('DD MMM')
-                    : moment.unix(item.last_message.date).format('HH:mm'),
-          },
+  const conversationIdsReducer = (result: ReadonlyArray<number>, item: IChatItem) => {
+    const profile = getProfileId(
+      get(item, 'conversation.peer.id'),
+      get(response, 'profiles'),
+      get(response, 'groups'),
+    );
+    if (!profile || !profile.id) {
+      return result;
+    }
+    return [...result, profile.id];
+  };
+
+  const conversationsReducer = (result: { [key: string]: IChat }, item: IChatItem) => {
+    const profile = getProfileId(
+      get(item, 'conversation.peer.id'),
+      get(response, 'profiles'),
+      get(response, 'groups'),
+    );
+    if (!profile || !profile.id) {
+      return result;
+    }
+    const name = get(profile, 'name');
+    const firstName = get(profile, 'first_name');
+    const lastName = get(profile, 'last_name');
+    const fullName = name
+      ? name
+      : firstName && lastName
+        ? `${firstName} ${lastName}`
+        : 'Неизвестно';
+    const text = item.last_message.text || getAttachmentReplacer(item);
+    const date = dateFormatter(item.last_message.date);
+    return {
+      ...result,
+      [profile.id]: {
+        id: profile.id,
+        previewAvatar: profile.photo_50,
+        fullName,
+        unreadCount: get(item, 'conversation.unread_count') || 0,
+        lastMessage: {
+          text,
+          date,
         },
-      };
-    }, {})
-    .value() || {};
+      },
+    };
+  };
   return {
-    conversations,
-    conversationIds,
+    conversationIds: chain(response)
+      .get('items')
+      .reduce(conversationIdsReducer, [])
+      .value() || [],
+    conversations: chain(response)
+      .get('items')
+      .reduce(conversationsReducer, {})
+      .value() || {},
   };
 };

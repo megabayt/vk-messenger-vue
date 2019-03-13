@@ -25,7 +25,9 @@ export default Vue.extend({
     watcher: null,
   }),
   mounted() {
-    this.checkToken();
+    setTimeout(() => {
+      this.checkToken();
+    }, 1000);
   },
   computed: {
     ...mapState({

@@ -28,7 +28,7 @@
       verticalAlignment="top"
     >
       <Label
-        :text="'12.12.2019'"
+        :text="conversation.lastMessage.date"
         class="date"></Label>
       <Label
         v-if="!!conversation.unreadCount"
