@@ -24,11 +24,6 @@ export default Vue.extend({
     webViewSrc: config.OAUTH_URL,
     watcher: null,
   }),
-  mounted() {
-    setTimeout(() => {
-      this.checkToken();
-    }, 1000);
-  },
   computed: {
     ...mapState({
       token: (state: IState) => state.user.token,
