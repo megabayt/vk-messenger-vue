@@ -2,7 +2,9 @@
   <StackLayout>
     <RadListView
       :pullToRefresh="true"
+      loadOnDemandMode="Auto"
       @pullToRefreshInitiated="pullToRefresh($event)"
+      @loadMoreDataRequested="infiniteScroll($event)"
       for="chatItem in data.items || []"
     >
       <v-template>
@@ -16,6 +18,7 @@
 </template>
 
 <script lang="ts">
+import { get } from 'lodash';
 import Vue from 'nativescript-vue';
 import { mapActions, mapState, mapGetters } from "vuex";
 import ChatListItem from "./ChatListItem.vue";
@@ -29,12 +32,20 @@ export default Vue.extend({
   },
   methods: {
     ...mapActions({
-      chatsFetch: "CHATS_FETCH"
+      chatsFetch: "CHATS_FETCH",
+      chatsAppendFetch: "CHATS_APPEND_FETCH",
     }),
     pullToRefresh({ object }: ListViewEventData) {
       this.$refs.chatList = object;
       this.chatsFetch();
-    }
+    },
+    infiniteScroll({ object }: ListViewEventData) {
+      this.$refs.chatList = object;
+      this.chatsAppendFetch({
+        offset: get(this.data, 'items.length'),
+        count: 20,
+      });
+    },
   },
   computed: {
     ...mapState({
@@ -50,6 +61,7 @@ export default Vue.extend({
     fetching: function(val) {
       if (!val && this.$refs.chatList) {
         this.$refs.chatList.notifyPullToRefreshFinished();
+        this.$refs.chatList.notifyLoadOnDemandFinished();
       }
     },
   },

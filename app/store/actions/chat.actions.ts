@@ -26,11 +26,11 @@ export const CHATS_APPEND_FETCH: Action< IState, IState > = async ({ commit }, p
     const response = get(result, 'data.response');
     const error = get(result, 'data.error');
     if (response) {
-      commit('CHATS_SET', { data: response, error: false });
+      commit('CHATS_APPEND_SET', { data: response, error: false });
     } else if (error) {
-      commit('CHATS_SET', { data: error, error: true });
+      commit('CHATS_APPEND_SET', { data: error, error: true });
     }
   } catch (err) {
-    commit('CHATS_SET', { data: { error_msg: 'Неизвестная ошибка' }, error: true });
+    commit('CHATS_APPEND_SET', { data: { error_msg: 'Неизвестная ошибка' }, error: true });
   }
 };
