@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'nativescript-vue';
 import { mapActions, mapState } from 'vuex'
 import Main from '@/components/Main.vue';
 import { config } from '@/constants/api';
@@ -24,6 +24,9 @@ export default Vue.extend({
     webViewSrc: config.OAUTH_URL,
     watcher: null,
   }),
+  mounted() {
+    setTimeout(this.checkToken, 1000);
+  },
   computed: {
     ...mapState({
       token: (state: IState) => state.user.token,

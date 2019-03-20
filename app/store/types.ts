@@ -1,5 +1,5 @@
 import { Store } from 'vuex';
-import { IChatsTransformedResponse } from '@/types';
+import { IChatsResponse } from '@/types';
 
 export interface IUserState {
   token: string;
@@ -8,7 +8,7 @@ export interface IUserState {
 export interface IChatsState {
   fetching: boolean;
   error: boolean;
-  data: IChatsTransformedResponse;
+  data?: IChatsResponse;
 }
 export interface IState {
   user: IUserState;
@@ -21,10 +21,6 @@ export const initialUserState: IUserState = {
 export const initialChatsState: IChatsState = {
   fetching: false,
   error: false,
-  data: {
-    conversationIds: [],
-    conversations: {},
-  },
 };
 export const initialState: IState = {
   user: initialUserState,

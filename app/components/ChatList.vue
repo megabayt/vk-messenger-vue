@@ -3,19 +3,22 @@
     <RadListView
       :pullToRefresh="true"
       @pullToRefreshInitiated="pullToRefresh($event)"
-      for="id in data.conversationIds"
+      for="chatItem in data.items || []"
     >
       <v-template>
-        <ChatListItem :conversation="data.conversations[id]"/>
+        <ChatListItem
+          :chatProfiles="chatProfiles"
+          :chatItem="chatItem"
+        />
       </v-template>
     </RadListView>
   </StackLayout>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import { mapActions, mapState } from "vuex";
-import ChatListItem from "@/components/ChatListItem.vue";
+import Vue from 'nativescript-vue';
+import { mapActions, mapState, mapGetters } from "vuex";
+import ChatListItem from "./ChatListItem.vue";
 import { IState } from "@/store/types";
 import { ListViewEventData } from "nativescript-ui-listview";
 
@@ -36,8 +39,12 @@ export default Vue.extend({
   computed: {
     ...mapState({
       fetching: (state: IState) => state.chats.fetching,
-      data: (state: IState) => state.chats.data
-    })
+      data: (state: IState) => state.chats.data,
+    }),
+    ...mapGetters({
+      chatProfiles: 'getChatProfiles',
+      conversations: 'getConversations',
+    }),
   },
   watch: {
     fetching: function(val) {

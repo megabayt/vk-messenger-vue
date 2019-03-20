@@ -4,6 +4,7 @@ import localStorage from 'nativescript-localstorage';
 import { initialState, IStore } from '@/store/types';
 
 import * as actions from './actions';
+import * as getters from './getters';
 import * as mutations from './mutations';
 
 Vue.use(Vuex);
@@ -22,6 +23,7 @@ const NSVuexPersistent = (store: IStore) => {
 
 export default new Vuex.Store({
   actions,
+  getters,
   mutations,
   state: initialState,
   plugins: [NSVuexPersistent],

@@ -4,21 +4,33 @@
       row="0"
       col="0"
       rowSpan="2"
-      :src="conversation.previewAvatar"
+      v-if="avatar"
+      :src="avatar"
       class="avatar"
       verticalAlignment="top"
       horizontalAlignment="left"></Image>
+    <GridLayout rows="25, 25" columns="25, 25" class="avatars" v-if="avatars.length">
+      <Image
+        v-for="(avatar, index) in avatars"
+        :key="index"
+        :row="index / 2 | floor"
+        :col="index % 2 | floor"
+        :src="avatar"
+        class="avatar-mini"
+        verticalAlignment="center"
+        horizontalAlignment="center"></Image>
+    </GridLayout>
     <StackLayout
       row="0"
       col="1"
       verticalAlignment="top"
     >
       <Label
-        :text="conversation.fullName"
+        :text="fullName"
         class="name"
         horizontalAlignment="left"></Label>
       <Label
-        :text="conversation.lastMessage.text"
+        :text="lastMessage.text"
         class="message"
         horizontalAlignment="left"></Label>
     </StackLayout>
@@ -28,11 +40,11 @@
       verticalAlignment="top"
     >
       <Label
-        :text="conversation.lastMessage.date"
+        :text="lastMessage.date"
         class="date"></Label>
       <Label
-        v-if="!!conversation.unreadCount"
-        :text="conversation.unreadCount"
+        v-if="!!unreadCount"
+        :text="unreadCount"
         class="badge"
         width="20"
         height="20"
@@ -43,14 +55,69 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-
-import { IChat } from '@/types';
+import Vue from 'nativescript-vue';
+import { IChatItem, IChatMergedProfiles } from '@/types';
+import { get } from 'lodash';
+import { getAttachmentReplacer, dateFormatter } from '@/utils/helpers';
 
 export default Vue.extend({
   props: {
-    conversation: Object as () => IChat,
-  }
+    chatItem: Object as () => IChatItem,
+    chatProfiles: Object as () => IChatMergedProfiles,
+  },
+  computed: {
+    peerId() {
+      return get(this.chatItem, 'conversation.peer.id') || -1;
+    },
+    profile() {
+      return get(this.chatProfiles, `[${this.peerId}]`) || {};
+    },
+    avatar() {
+      return get(this.profile, `photo_50`);
+    },
+    avatars() {
+      const activeIds: ReadonlyArray<number> = get(this.chatItem, 'conversation.chat_settings.active_ids') || [];
+      if (activeIds.length) {
+        return activeIds.map(activeId => get(this.chatProfiles, `[${activeId}].photo_50`));
+      }
+      return [];
+    },
+    fullName() {
+      const name = get(this.profile, 'name');
+      if (name) {
+        return name;
+      }
+      const firstName = get(this.profile, 'first_name');
+      const lastName = get(this.profile, 'last_name');
+      if (firstName && lastName) {
+        return `${firstName} ${lastName}`;
+      }
+      const title = get(this.chatItem, 'conversation.chat_settings.title');
+      if (title) {
+        return title;
+      }
+      return 'Неизвестно';
+    },
+    lastMessage() {
+      return {
+        text: get(this.chatItem, 'last_message.text')
+          || getAttachmentReplacer(this.chatItem),
+        date: dateFormatter(get(this.chatItem, 'last_message.date')),
+      };
+    },
+    unreadCount() {
+      return get(this.chatItem, 'conversation.unread_count') || 0;
+    },
+  },
+  filters: {
+    floor: function (value: any) {
+      const floored = Math.floor(value);
+      if (!floored) {
+        return 0;
+      }
+      return floored;
+    },
+  },
 })
 </script>
 
@@ -63,6 +130,15 @@ export default Vue.extend({
     height: 50;
     border-radius: 50%;
   }
+  .avatars {
+    width: 50;
+    height: 50;
+  },
+  .avatar-mini {
+    width: 25;
+    height: 25;
+    border-radius: 50%;
+  },
   .name {
     font-size: 14;
   }

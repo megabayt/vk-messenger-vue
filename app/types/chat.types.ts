@@ -2,12 +2,25 @@ import { ApiResponse } from 'apisauce';
 
 import { IAttachment, ICommonResponse } from './common.types';
 
-export type IChatsFetch = () => Promise<ApiResponse<ICommonResponse<IChatsResponse>>>;
+export interface IChatsParams {
+  offset?: number;
+  count?: number;
+  filter?: 'all' | 'unread' | 'important' | 'unanswered';
+  extended?: number;
+  bool?: number;
+  start_message_id?: number;
+  fields?: string;
+  group_id?: number;
+}
+export type IChatsFetch = (params?: IChatsParams) => Promise<ApiResponse<ICommonResponse<IChatsResponse>>>;
 export interface IChatsResponse {
   count: number;
   items: ReadonlyArray<IChatItem>;
   profiles: ReadonlyArray<IChatProfile>;
   groups: ReadonlyArray<IChatGroup>;
+}
+export interface IChatMergedProfiles {
+  [key: number]: IChatProfile | IChatGroup;
 }
 export interface IChatProfile {
   id: number;
@@ -42,7 +55,7 @@ export interface IChatItem {
   conversation: {
     peer: {
       id: number;
-      type: string;
+      type: 'user' | 'chat' | 'group' | 'email';
       local_id: number;
     };
     in_read: number;
@@ -81,19 +94,5 @@ export interface IChatItem {
     random_id: number;
     attachments: ReadonlyArray<IAttachment>;
     is_hidden: boolean;
-  };
-}
-export interface IChatsTransformedResponse {
-  conversationIds: ReadonlyArray<number>;
-  conversations: { [key: string]: IChat };
-}
-export interface IChat {
-  id: number;
-  previewAvatar: string;
-  fullName: string;
-  unreadCount: number;
-  lastMessage: {
-    text: string;
-    date: string;
   };
 }

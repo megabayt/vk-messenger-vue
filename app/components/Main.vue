@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Vue from 'nativescript-vue';
 import ChatList from './ChatList.vue';
 
 export default Vue.extend({
