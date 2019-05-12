@@ -133,12 +133,12 @@ export default Vue.extend({
   .avatars {
     width: 50;
     height: 50;
-  },
+  }
   .avatar-mini {
     width: 25;
     height: 25;
     border-radius: 50%;
-  },
+  }
   .name {
     font-size: 14;
   }
