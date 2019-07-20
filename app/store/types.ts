@@ -19,12 +19,12 @@ export const initialUserState: IUserState = {
   token: '',
 };
 export const initialChatsState: IChatsState = {
-  fetching: false,
   error: false,
+  fetching: false,
 };
 export const initialState: IState = {
-  user: initialUserState,
   chats: initialChatsState,
+  user: initialUserState,
 };
 
 export type IStore = Store<IState>;

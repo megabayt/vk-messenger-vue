@@ -13,30 +13,22 @@
 
 <script lang="ts">
 import Vue from 'nativescript-vue';
-import { mapActions, mapState } from 'vuex'
+import { mapActions, mapState } from 'vuex';
 import Main from '@/components/Main.vue';
 import { config } from '@/constants/api';
 import { IState } from '@/store/types';
 
 export default Vue.extend({
-  data: () => ({
-    showWv: true,
-    webViewSrc: config.OAUTH_URL,
-    watcher: null,
-  }),
-  mounted() {
-    setTimeout(this.checkToken, 1000);
-  },
   computed: {
     ...mapState({
       token: (state: IState) => state.user.token,
     }),
   },
-  watch: {
-    token: function () {
-      this.checkToken();
-    }
-  },
+  data: () => ({
+    showWv: true,
+    watcher: null,
+    webViewSrc: config.OAUTH_URL,
+  }),
   methods: {
     ...mapActions({
       userTokenSet: 'USER_TOKEN_SET',
@@ -56,7 +48,15 @@ export default Vue.extend({
           this.showWv = false;
         }
       }
-    }
-  }
-})
+    },
+  },
+  mounted() {
+    setTimeout(this.checkToken, 1000);
+  },
+  watch: {
+    token() {
+      this.checkToken();
+    },
+  },
+});
 </script>

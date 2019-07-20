@@ -25,5 +25,5 @@ import ChatList from './ChatList.vue';
 
 export default Vue.extend({
   components: { ChatList },
-})
+});
 </script>

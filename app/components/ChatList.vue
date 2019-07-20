@@ -20,20 +20,30 @@
 <script lang="ts">
 import { get } from 'lodash';
 import Vue from 'nativescript-vue';
-import { mapActions, mapState, mapGetters } from "vuex";
-import ChatListItem from "./ChatListItem.vue";
-import { IState } from "@/store/types";
-import { ListViewEventData } from "nativescript-ui-listview";
+import { mapActions, mapState, mapGetters } from 'vuex';
+import { ListViewEventData } from 'nativescript-ui-listview';
+import ChatListItem from './ChatListItem.vue';
+import { IState } from '@/store/types';
 
 export default Vue.extend({
   components: { ChatListItem },
+  computed: {
+    ...mapState({
+      data: (state: IState) => state.chats.data,
+      fetching: (state: IState) => state.chats.fetching,
+    }),
+    ...mapGetters({
+      chatProfiles: 'getChatProfiles',
+      conversations: 'getConversations',
+    }),
+  },
   created() {
     this.chatsFetch();
   },
   methods: {
     ...mapActions({
-      chatsFetch: "CHATS_FETCH",
-      chatsAppendFetch: "CHATS_APPEND_FETCH",
+      chatsAppendFetch: 'CHATS_APPEND_FETCH',
+      chatsFetch: 'CHATS_FETCH',
     }),
     pullToRefresh({ object }: ListViewEventData) {
       this.$refs.chatList = object;
@@ -42,23 +52,13 @@ export default Vue.extend({
     infiniteScroll({ object }: ListViewEventData) {
       this.$refs.chatList = object;
       this.chatsAppendFetch({
-        offset: get(this.data, 'items.length'),
         count: 20,
+        offset: get(this.data, 'items.length'),
       });
     },
   },
-  computed: {
-    ...mapState({
-      fetching: (state: IState) => state.chats.fetching,
-      data: (state: IState) => state.chats.data,
-    }),
-    ...mapGetters({
-      chatProfiles: 'getChatProfiles',
-      conversations: 'getConversations',
-    }),
-  },
   watch: {
-    fetching: function(val) {
+    fetching(val) {
       if (!val && this.$refs.chatList) {
         this.$refs.chatList.notifyPullToRefreshFinished();
         this.$refs.chatList.notifyLoadOnDemandFinished();

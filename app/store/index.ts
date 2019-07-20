@@ -9,14 +9,14 @@ import * as mutations from './mutations';
 
 Vue.use(Vuex);
 
-const NSVuexPersistent = (store: IStore) => {
+const NSVuexPersistent = (store: IStore): void => {
   // Init hook.
   const storageStr = localStorage.getItem('ns-vuex-persistent');
   if (storageStr) {
     store.replaceState(JSON.parse(storageStr));
   }
-  store.subscribe((_0, state) => {
-   // Suscribe hook.
+  store.subscribe((_0, state): void => {
+    // Suscribe hook.
     localStorage.setItem('ns-vuex-persistent', JSON.stringify(state));
   });
 };
@@ -25,6 +25,6 @@ export default new Vuex.Store({
   actions,
   getters,
   mutations,
-  state: initialState,
   plugins: [NSVuexPersistent],
+  state: initialState,
 });

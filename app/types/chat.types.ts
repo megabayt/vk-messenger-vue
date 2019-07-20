@@ -3,16 +3,16 @@ import { ApiResponse } from 'apisauce';
 import { IAttachment, ICommonResponse } from './common.types';
 
 export interface IChatsParams {
-  offset?: number;
-  count?: number;
-  filter?: 'all' | 'unread' | 'important' | 'unanswered';
-  extended?: number;
-  bool?: number;
-  start_message_id?: number;
-  fields?: string;
-  group_id?: number;
+  offset: number;
+  count: number;
+  filter: 'all' | 'unread' | 'important' | 'unanswered';
+  extended: number;
+  bool: number;
+  startMessageId: number;
+  fields: string;
+  groupId: number;
 }
-export type IChatsFetch = (params?: IChatsParams) => Promise<ApiResponse<ICommonResponse<IChatsResponse>>>;
+export type IChatsFetch = (params: Partial<IChatsParams>) => Promise<ApiResponse<ICommonResponse<IChatsResponse>>>;
 export interface IChatsResponse {
   count: number;
   items: ReadonlyArray<IChatItem>;
@@ -20,79 +20,79 @@ export interface IChatsResponse {
   groups: ReadonlyArray<IChatGroup>;
 }
 export interface IChatMergedProfiles {
-  [key: number]: IChatProfile | IChatGroup;
+  keyNumber: IChatProfile | IChatGroup;
 }
 export interface IChatProfile {
   id: number;
-  first_name: string;
-  last_name: string;
-  is_closed: boolean;
-  can_access_closed: boolean;
+  firstName: string;
+  lastName: string;
+  isClosed: boolean;
+  canAccessClosed: boolean;
   sex: number;
-  screen_name: string;
-  photo_50: string;
-  photo_100: string;
+  screenName: string;
+  photo50: string;
+  photo100: string;
   online: number;
-  online_app?: string;
-  online_mobile?: number;
+  onlineApp: string;
+  onlineMobile: number;
 
 }
 export interface IChatGroup {
   id: number;
   name: string;
-  screen_name: string;
-  is_closed: number;
+  screenName: string;
+  isClosed: number;
   type: string;
-  is_admin: number;
-  is_member: number;
-  is_advertiser: number;
-  photo_50: string;
-  photo_100: string;
-  photo_200: string;
-  admin_level?: number;
+  isAdmin: number;
+  isMember: number;
+  isAdvertiser: number;
+  photo50: string;
+  photo100: string;
+  photo200: string;
+  adminLevel: number;
 }
 export interface IChatItem {
   conversation: {
     peer: {
       id: number;
       type: 'user' | 'chat' | 'group' | 'email';
-      local_id: number;
+      localId: number;
     };
-    in_read: number;
-    out_read: number;
-    last_message_id: number;
-    can_write: {
+    inRead: number;
+    outRead: number;
+    lastMessageId: number;
+    canWrite: {
       allowed: boolean;
     };
-    chat_settings?: {
+    chatSettings: {
       title: string;
-      members_count: number;
+      membersCount: number;
       state: string;
-      active_ids: ReadonlyArray<number>;
+      activeIds: ReadonlyArray<number>;
       acl: {
-        can_invite: boolean;
-        can_change_info: boolean;
-        can_change_pin: boolean;
-        can_promote_users: boolean;
-        can_see_invite_link: boolean;
-        can_change_invite_link: boolean;
+        canInvite: boolean;
+        canChangeInfo: boolean;
+        canChangePin: boolean;
+        canPromoteUsers: boolean;
+        canSeeInviteLink: boolean;
+        canChangeInviteLink: boolean;
       };
-      is_group_channel: boolean;
-      owner_id: number;
+      isGroupChannel: boolean;
+      ownerId: number;
     };
   };
-  last_message: {
+  lastMessage: {
     date: number;
-    from_id: number;
+    fromId: number;
     id: number;
     out: number;
-    peer_id: number;
+    peerId: number;
     text: string;
-    conversation_message_id: number;
-    fwd_messages: ReadonlyArray<any>;
+    conversationMessageId: number;
+    fwdMessages: ReadonlyArray<any>;
     important: boolean;
-    random_id: number;
+    randomId: number;
     attachments: ReadonlyArray<IAttachment>;
-    is_hidden: boolean;
+    isHidden: boolean;
   };
 }

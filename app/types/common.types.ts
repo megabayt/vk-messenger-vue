@@ -5,73 +5,73 @@ export interface ICommonOkResponse<T> {
 }
 export interface ICommonErrorResponse {
   error: {
-    error_code: number;
-    error_msg: string;
-    request_params: ReadonlyArray<any>,
+    errorCode: number;
+    errorMsg: string;
+    requestParams: ReadonlyArray<any>;
   };
 }
 export type ICommonResponse<T> = ICommonOkResponse<T> | ICommonErrorResponse;
 
 export const okResponse: ApiResponse<any> = {
-  ok: true,
-  problem: null,
-  originalError: null,
-  status: 200,
-  headers: {},
   config: {},
   duration: 1000,
-}
+  headers: {},
+  ok: true,
+  originalError: null,
+  problem: null,
+  status: 200,
+};
 
 export interface IPhotoAttachment {
   type: string;
   photo: {
     id: number;
-    album_id: number;
-    owner_id: number;
-    sizes: ReadonlyArray< {
+    albumId: number;
+    ownerId: number;
+    sizes: ReadonlyArray<{
       type: string;
       url: string;
       width: number;
       height: number;
-    } >;
+    }>;
     text: string;
     date: number;
-    access_key: string;
+    accessKey: string;
   };
 }
 export interface IStickerAttachment {
   type: string;
   sticker: {
-    product_id: number;
-    sticker_id: number;
+    productId: number;
+    stickerId: number;
     images: ReadonlyArray<{
       url: string;
       width: number;
       height: number;
     }>;
-    images_with_background: ReadonlyArray<{
+    imagesWithBackground: ReadonlyArray<{
       url: string;
       width: number;
       height: number;
     }>;
-    animation_url: string;
+    animationUrl: string;
   };
 }
 export interface IWallPostAttachment {
   type: string;
   wall: {
     id: number;
-    from_id: number;
-    to_id: number;
+    fromId: number;
+    toId: number;
     date: number;
-    post_type: string;
+    postType: string;
     text: string;
-    marked_as_ads: number;
+    markedAsAds: number;
     attachments: ReadonlyArray<{
       type: string;
       doc: {
         id: number;
-        owner_id: number;
+        ownerId: number;
         title: string;
         size: number;
         ext: string;
@@ -91,37 +91,39 @@ export interface IWallPostAttachment {
             src: string;
             width: number;
             height: number;
-            file_size: number;
+            fileSize: number;
           };
         };
-        access_key: string;
+        accessKey: string;
       };
     }>;
-    post_source: {
+    postSource: {
       type: string;
     };
     comments: {
       count: number;
-      can_post: number;
-      groups_can_post: boolean;
+      canPost: number;
+      groupsCanPost: boolean;
     };
     likes: {
       count: number;
-      user_likes: number;
-      can_like: number;
-      can_publish: number;
+      userLikes: number;
+      canLike: number;
+      canPublish: number;
     };
     reposts: {
       count: number;
-      user_reposted: number;
+      userReposted: number;
     };
     views: {
       count: number;
     };
-    is_favorite: boolean;
-    access_key: string;
+    isFavorite: boolean;
+    accessKey: string;
   };
 }
 export type IAttachment = IPhotoAttachment
-  | IStickerAttachment
-  | IWallPostAttachment;
+| IStickerAttachment
+| IWallPostAttachment;
+
+export default undefined;

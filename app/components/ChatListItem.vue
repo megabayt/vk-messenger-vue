@@ -56,22 +56,12 @@
 
 <script lang="ts">
 import Vue from 'nativescript-vue';
-import { IChatItem, IChatMergedProfiles } from '@/types';
 import { get } from 'lodash';
+import { IChatItem, IChatMergedProfiles } from '@/types';
 import { getAttachmentReplacer, dateFormatter } from '@/utils/helpers';
 
 export default Vue.extend({
-  props: {
-    chatItem: Object as () => IChatItem,
-    chatProfiles: Object as () => IChatMergedProfiles,
-  },
   computed: {
-    peerId() {
-      return get(this.chatItem, 'conversation.peer.id') || -1;
-    },
-    profile() {
-      return get(this.chatProfiles, `[${this.peerId}]`) || {};
-    },
     avatar() {
       return get(this.profile, `photo_50`);
     },
@@ -100,17 +90,23 @@ export default Vue.extend({
     },
     lastMessage() {
       return {
+        date: dateFormatter(get(this.chatItem, 'last_message.date')),
         text: get(this.chatItem, 'last_message.text')
           || getAttachmentReplacer(this.chatItem),
-        date: dateFormatter(get(this.chatItem, 'last_message.date')),
       };
+    },
+    peerId() {
+      return get(this.chatItem, 'conversation.peer.id') || -1;
+    },
+    profile() {
+      return get(this.chatProfiles, `[${this.peerId}]`) || {};
     },
     unreadCount() {
       return get(this.chatItem, 'conversation.unread_count') || 0;
     },
   },
   filters: {
-    floor: function (value: any) {
+    floor(value: number) {
       const floored = Math.floor(value);
       if (!floored) {
         return 0;
@@ -118,7 +114,11 @@ export default Vue.extend({
       return floored;
     },
   },
-})
+  props: {
+    chatItem: Object as () => IChatItem,
+    chatProfiles: Object as () => IChatMergedProfiles,
+  },
+});
 </script>
 
 <style>
